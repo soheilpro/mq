@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+
+QUEUE="$1"
+
+# Ensure queue name
+if [[ -z "$QUEUE" ]]; then
+  echo 'Usage: mpeek <queue>'
+  exit 1
+fi
+
+# If no queue directory, quit
+if [[ ! -d "$QUEUE" ]]; then
+  exit 2
+fi
+
+cd "$QUEUE"
+
+TAIL_ID=$(ls -1 | head -1)
+
+# If no item, quit
+if [[ -z $TAIL_ID ]]; then
+  exit 3
+fi
+
+# Ensure this is a valid queue item and not some random file
+if [[ ! "$TAIL_ID" =~ ^[[:digit:]]{10}$ ]]; then
+  echo "'$QUEUE' does not appear to be a valid queue."
+  exit 4
+fi
+
+cat $TAIL_ID

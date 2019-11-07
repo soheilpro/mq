@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+QUEUE="$1"
+
+# Ensure queue name
+if [[ -z "$QUEUE" ]]; then
+  echo 'Usage: echo <message> | mpush <queue>'
+  exit 1
+fi
+
+# Create queue directory, if not found
+if [[ ! -d "$QUEUE" ]]; then
+  mkdir "$QUEUE"
+fi
+
+cd "$QUEUE"
+
+HEAD_ID=$(ls -1 | tail -1)
+NEXT_ID=$(printf "%010d" $((10#$HEAD_ID + 1)))
+
+cat /dev/stdin > $NEXT_ID
